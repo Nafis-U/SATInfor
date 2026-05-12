@@ -6,18 +6,19 @@
     <title>Social Shield: Bureaucracy Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Inter:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Inter:wght@400;700;900&display=swap');
         
         :root {
-            --paper-bg: #e2e8f0;
-            --desk-bg: #1e293b;
+            --paper-bg: #f8fafc;
+            --desk-bg: #0f172a;
+            --navy-outline: #1e293b;
             --stamp-red: #ef4444;
             --stamp-green: #22c55e;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
+            background-color: var(--desk-bg);
             color: #f1f5f9;
             margin: 0;
             overflow: hidden;
@@ -30,7 +31,7 @@
         .game-container {
             width: 100vw;
             height: 100vh;
-            background: var(--desk-bg);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -49,55 +50,61 @@
             display: flex;
         }
 
-        /* Gaya Kertas Postingan ala Papers Please */
+        /* Kertas Dokumen Terupdate */
         .post-paper {
-            width: 380px;
-            min-height: 480px;
-            background: #f8fafc;
+            width: 400px;
+            min-height: 520px;
+            background: var(--paper-bg);
             color: #1e293b;
-            padding: 30px;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
-            border: 1px solid #cbd5e1;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 6px solid var(--navy-outline);
+            border-radius: 32px; /* Sudut tumpul */
             cursor: grab;
             position: absolute;
             left: 50%;
-            top: 50%;
+            top: 45%;
             transform: translate(-50%, -50%);
             z-index: 10;
             font-family: 'Special Elite', cursive;
-            transition: transform 0.1s ease;
+            transition: transform 0.1s ease, box-shadow 0.2s ease;
             user-select: none;
         }
 
         .post-paper:active {
             cursor: grabbing;
             z-index: 20;
+            transform: translate(-50%, -50%) scale(1.02);
+            box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.6);
         }
 
-        /* Area Stempel */
+        /* Area Stempel yang Lebih Besar */
         .stamp-zone {
             position: absolute;
-            bottom: 40px;
-            width: 220px;
-            height: 150px;
-            border: 4px dashed rgba(255,255,255,0.2);
-            border-radius: 20px;
+            bottom: 5vh;
+            width: 300px; /* Lebih lebar */
+            height: 180px; /* Lebih tinggi */
+            border: 6px dashed rgba(255,255,255,0.15);
+            border-radius: 40px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 1.5rem;
-            transition: all 0.3s;
+            font-size: 1.8rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .stamp-approve {
-            right: 10%;
+            right: 8%;
             color: var(--stamp-green);
             background: rgba(34, 197, 94, 0.05);
         }
 
         .stamp-deny {
-            left: 10%;
+            left: 8%;
             color: var(--stamp-red);
             background: rgba(239, 68, 68, 0.05);
         }
@@ -106,43 +113,50 @@
             background: rgba(255,255,255,0.1);
             transform: scale(1.1);
             border-color: currentColor;
+            box-shadow: 0 0 40px currentColor;
+        }
+
+        .stamp-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
         }
 
         /* Header Birokrasi */
         .office-header {
-            background: #0f172a;
-            padding: 15px 40px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid #334155;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
             width: 100%;
+            z-index: 50;
         }
 
         .status-badge {
-            background: #334155;
-            padding: 5px 15px;
-            border-radius: 4px;
+            background: #1e293b;
+            padding: 8px 20px;
+            border-radius: 12px;
             font-family: 'Special Elite', cursive;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Efek Stempel Setelah Selesai */
+        /* Efek Stempel */
         .stamped-mark {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            border: 5px solid;
-            padding: 5px 15px;
-            font-size: 2rem;
-            font-weight: bold;
+            top: 30px;
+            right: 30px;
+            border: 8px solid;
+            padding: 10px 25px;
+            font-size: 2.5rem;
+            font-weight: 900;
             opacity: 0.8;
-            transform: rotate(-15deg);
+            transform: rotate(-20deg);
             pointer-events: none;
+            border-radius: 10px;
         }
-
-        .stamped-approve { color: var(--stamp-green); border-color: var(--stamp-green); }
-        .stamped-deny { color: var(--stamp-red); border-color: var(--stamp-red); }
 
     </style>
 </head>
@@ -151,50 +165,60 @@
     <div class="game-container">
         <!-- HEADER -->
         <div class="office-header">
-            <div class="flex items-center gap-4">
-                <span class="text-xl font-bold tracking-tighter">MINISTRY OF SOCIAL MEDIA</span>
-                <span id="player-display" class="status-badge text-blue-400">PENGAMAT: -</span>
+            <div class="flex items-center gap-6">
+                <span class="text-2xl font-black tracking-tighter text-blue-500">SOCIAL SHIELD</span>
+                <span id="player-display" class="status-badge text-slate-300">PETUGAS: -</span>
             </div>
-            <div class="flex items-center gap-8 font-bold">
-                <div class="text-yellow-500">POIN: <span id="score-val" class="tabular-nums">0</span></div>
-                <div class="text-red-500">JAM: <span id="time-val" class="tabular-nums">08:00</span></div>
+            <div class="flex items-center gap-12 font-bold">
+                <div class="text-yellow-500 text-xl">POIN: <span id="score-val" class="tabular-nums">0</span></div>
+                <div id="timer-display" class="text-red-500 text-xl font-black">JAM: <span id="time-val" class="tabular-nums">08:00</span></div>
             </div>
         </div>
 
         <!-- LOBBY -->
         <div id="screen-lobby" class="screen active">
-            <h1 class="text-7xl font-black mb-4 italic" style="font-family: 'Special Elite';">SOCIAL SHIELD</h1>
-            <p class="text-slate-400 mb-12 italic">Glory to the Internet. Masukkan identitas anda.</p>
+            <h1 class="text-8xl font-black mb-6 italic tracking-tighter" style="font-family: 'Special Elite';">OFFICE v.2</h1>
+            <p class="text-slate-400 mb-12 text-xl italic font-light">"Keamanan internet adalah tanggung jawab Anda."</p>
             
-            <input type="text" id="name-input" placeholder="NAMA PETUGAS" class="mb-8 px-8 py-4 bg-slate-800 border-2 border-slate-600 text-white font-bold text-center w-80 focus:outline-none focus:border-blue-500">
+            <input type="text" id="name-input" placeholder="NAMA PETUGAS" class="mb-10 px-10 py-5 bg-slate-800 border-4 border-slate-700 text-white font-black text-2xl text-center w-96 rounded-2xl focus:outline-none focus:border-blue-500 transition-all">
             
-            <button onclick="initGame()" class="px-16 py-4 bg-blue-700 hover:bg-blue-600 font-bold text-xl border-b-4 border-blue-900 transition-all">MULAI SHIFT</button>
+            <button onclick="initGame()" class="px-20 py-5 bg-blue-600 hover:bg-blue-500 font-black text-2xl rounded-2xl shadow-2xl border-b-8 border-blue-900 transition-all active:translate-y-2 active:border-b-0">MASUK SHIFT</button>
         </div>
 
         <!-- GAMEPLAY -->
         <div id="screen-game" class="screen">
             <!-- Instruksi -->
-            <div class="absolute top-10 text-slate-500 italic pointer-events-none">
-                Seret dokumen ke area yang tepat untuk memproses.
+            <div class="absolute top-10 text-slate-500 text-lg italic pointer-events-none opacity-50">
+                Seret dokumen ke stempel bawah untuk memproses.
             </div>
 
             <!-- Area Drop -->
-            <div id="zone-deny" class="stamp-zone stamp-deny">BLOKIR [LEFT]</div>
-            <div id="zone-approve" class="stamp-zone stamp-approve">SETUJU [RIGHT]</div>
+            <div id="zone-deny" class="stamp-zone stamp-deny">
+                <span class="stamp-icon">🚫</span>
+                <span>BLOKIR</span>
+            </div>
+            <div id="zone-approve" class="stamp-zone stamp-approve">
+                <span class="stamp-icon">✅</span>
+                <span>SETUJU</span>
+            </div>
 
-            <!-- Dokumen (Akan di-generate JS) -->
+            <!-- Dokumen -->
             <div id="paper-container"></div>
         </div>
 
         <!-- RESULT -->
         <div id="screen-result" class="screen">
-            <h2 class="text-5xl font-bold mb-4" style="font-family: 'Special Elite';">SHIFT SELESAI</h2>
-            <div class="bg-slate-800 p-8 w-96 border-2 border-slate-700 mb-8">
-                <p class="mb-2 flex justify-between">Total Diproses: <span id="stat-total">0</span></p>
-                <p class="mb-6 flex justify-between">Kesalahan: <span id="stat-wrong" class="text-red-400">0</span></p>
-                <div class="text-4xl font-bold text-center text-green-400 border-t-2 border-slate-600 pt-4" id="stat-salary">Rp 0</div>
+            <h2 class="text-6xl font-black mb-8" style="font-family: 'Special Elite';">LAPORAN HARIAN</h2>
+            <div class="bg-slate-800/50 p-12 w-[500px] rounded-3xl border-4 border-slate-700 mb-12 backdrop-blur-xl">
+                <div class="space-y-6 text-2xl">
+                    <p class="flex justify-between">Total Konten: <span id="stat-total" class="font-black">0</span></p>
+                    <p class="flex justify-between text-red-400">Kesalahan: <span id="stat-wrong" class="font-black">0</span></p>
+                    <div class="h-px bg-slate-600 my-4"></div>
+                    <p class="text-sm text-slate-400 uppercase tracking-widest">Estimasi Honorarium</p>
+                    <div class="text-6xl font-black text-green-400" id="stat-salary">Rp 0</div>
+                </div>
             </div>
-            <button onclick="location.reload()" class="px-12 py-3 bg-slate-700 hover:bg-slate-600 font-bold">KEMBALI KE POS</button>
+            <button onclick="location.reload()" class="px-16 py-4 bg-slate-700 hover:bg-slate-600 font-bold text-xl rounded-xl transition-all">KEMBALI KE LOBBY</button>
         </div>
     </div>
 
@@ -207,7 +231,8 @@
             { user: "News_Daily", text: "Pemerintah mengumumkan kebijakan baru mengenai pajak.", safe: true },
             { user: "Spammer_99", text: "BELI FOLLOWER MURAH! DM UNTUK HARGA TERBAIK!!!", safe: false },
             { user: "Science_Lover", text: "Teori relativitas Einstein menjelaskan tentang ruang waktu.", safe: true },
-            { user: "Hacker_Z", text: "Download file ini untuk cheat game gratis. 100% work.", safe: false }
+            { user: "Hacker_Z", text: "Download file ini untuk cheat game gratis. 100% work.", safe: false },
+            { user: "Meme_Lord", text: "SKIBIDI TOILET RIZZLER FANUM TAX GYATT!!!", safe: false }
         ];
 
         let score = 0;
@@ -227,7 +252,6 @@
             spawnPaper();
             const timer = setInterval(() => {
                 timeLeft--;
-                const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
                 document.getElementById('time-val').innerText = `16:${seconds < 10 ? '0' + seconds : seconds}`;
                 
@@ -248,23 +272,31 @@
             paper.id = 'active-paper';
             paper.dataset.safe = data.safe;
             
+            // Random sedikit rotasi agar tidak kaku
+            const randomRot = (Math.random() * 4 - 2);
+            paper.style.transform = `translate(-50%, -50%) rotate(${randomRot}deg)`;
+            
             paper.innerHTML = `
-                <div class="border-b-2 border-slate-300 mb-4 pb-2 text-xs opacity-50">DOC_TYPE: SOCIAL_FEED_v4</div>
-                <div class="mb-4">
-                    <div class="text-xs font-bold uppercase tracking-widest text-slate-400">Pengirim:</div>
-                    <div class="text-lg">${data.user}</div>
+                <div class="flex justify-between items-center border-b-4 border-slate-200 mb-6 pb-2">
+                    <span class="text-xs font-bold opacity-30">TYPE: FEED_DOC_V2</span>
+                    <span class="text-xs font-bold opacity-30">ID: #${Math.floor(Math.random()*9000+1000)}</span>
                 </div>
-                <div class="mb-8">
-                    <div class="text-xs font-bold uppercase tracking-widest text-slate-400">Isi Konten:</div>
-                    <div class="text-xl leading-relaxed">"${data.text}"</div>
+                <div class="mb-6">
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">Pengirim Data</div>
+                    <div class="text-2xl font-bold border-b border-slate-100 pb-2">${data.user}</div>
                 </div>
-                <div class="mt-auto text-[10px] italic text-slate-400">Tarik dokumen ke stempel yang sesuai.</div>
+                <div class="mb-10">
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Transkrip Konten</div>
+                    <div class="text-2xl leading-snug italic">"${data.text}"</div>
+                </div>
+                <div class="mt-auto pt-4 border-t-2 border-slate-100 flex justify-center">
+                    <div class="px-4 py-2 border-2 border-slate-200 rounded-full text-[10px] font-black text-slate-300">WAITING FOR ACTION</div>
+                </div>
             `;
 
             container.appendChild(paper);
             currentPaper = paper;
 
-            // Logika Dragging
             paper.addEventListener('mousedown', startDrag);
             window.addEventListener('mousemove', drag);
             window.addEventListener('mouseup', stopDrag);
@@ -286,14 +318,20 @@
             currentPaper.style.left = x + 'px';
             currentPaper.style.top = y + 'px';
 
-            // Highlight zone
             const screenWidth = window.innerWidth;
-            if (e.clientX > screenWidth * 0.7) {
-                document.getElementById('zone-approve').classList.add('zone-highlight');
-            } else if (e.clientX < screenWidth * 0.3) {
-                document.getElementById('zone-deny').classList.add('zone-highlight');
-            } else {
-                document.querySelectorAll('.stamp-zone').forEach(z => z.classList.remove('zone-highlight'));
+            const screenHeight = window.innerHeight;
+
+            // Highlight zone berdasarkan posisi (Kiri vs Kanan di area bawah)
+            if (e.clientY > screenHeight * 0.5) {
+                if (e.clientX > screenWidth * 0.6) {
+                    document.getElementById('zone-approve').classList.add('zone-highlight');
+                    document.getElementById('zone-deny').classList.remove('zone-highlight');
+                } else if (e.clientX < screenWidth * 0.4) {
+                    document.getElementById('zone-deny').classList.add('zone-highlight');
+                    document.getElementById('zone-approve').classList.remove('zone-highlight');
+                } else {
+                    document.querySelectorAll('.stamp-zone').forEach(z => z.classList.remove('zone-highlight'));
+                }
             }
         }
 
@@ -302,20 +340,28 @@
             isDragging = false;
             
             const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
             const isSafe = currentPaper.dataset.safe === "true";
             
-            if (e.clientX > screenWidth * 0.7) {
-                processResult(isSafe === true);
-            } else if (e.clientX < screenWidth * 0.3) {
-                processResult(isSafe === false);
+            if (e.clientY > screenHeight * 0.5) {
+                if (e.clientX > screenWidth * 0.6) {
+                    processResult(isSafe === true);
+                } else if (e.clientX < screenWidth * 0.4) {
+                    processResult(isSafe === false);
+                } else {
+                    resetPaper();
+                }
             } else {
-                // Balik ke tengah kalau tidak di-drop di area stempel
-                currentPaper.style.transition = 'all 0.3s';
-                currentPaper.style.left = '50%';
-                currentPaper.style.top = '50%';
+                resetPaper();
             }
             
             document.querySelectorAll('.stamp-zone').forEach(z => z.classList.remove('zone-highlight'));
+        }
+
+        function resetPaper() {
+            currentPaper.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            currentPaper.style.left = '50%';
+            currentPaper.style.top = '45%';
         }
 
         function processResult(correct) {
@@ -328,7 +374,13 @@
             }
             
             document.getElementById('score-val').innerText = score;
-            spawnPaper();
+            
+            // Efek kertas terbang keluar
+            currentPaper.style.transition = 'all 0.4s ease-in';
+            currentPaper.style.transform = `translate(-50%, 150%) rotate(${Math.random()*40-20}deg)`;
+            currentPaper.style.opacity = '0';
+            
+            setTimeout(spawnPaper, 400);
         }
 
         function showResult() {
