@@ -132,9 +132,9 @@
             border-color: #cbd5e1;
         }
 
-        /* Gaya Stabilo Kuning Modern saat di-highlight */
+        /* Script buat nyetabilo kata terlarang */
         .word-token.highlighted {
-            background-color: #dd0000; /* Kuning stabilo */
+            background-color: #fd1d1d; /* Kuning stabilo */
             color: #1e293b;
             border-color: #eab308;
             font-weight: 600;
@@ -166,7 +166,7 @@
         }
 
         .logo-glow {
-            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.65));
         }
     </style>
 </head>
@@ -177,29 +177,32 @@
 
         <!-- LOBBY SCREEN -->
         <div id="screen-lobby" class="screen active">
-            <div class="flex flex-col md:flex-row items-center justify-between w-full max-w-5xl gap-12 text-left px-6">
-                <!-- Sisi Kiri: Logo, Judul, Subjudul -->
-                <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
-                    <div class="mb-6 logo-glow">
-                        <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto md:mx-0">
+            <div class="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl gap-16 text-left px-8">
+                <!-- Sisi Kiri: Logo Besar di Tengah-Tengah Judul & Subjudul -->
+                <div class="flex-1 flex flex-col items-center md:items-start text-center md:text-left gap-4">
+                    <!-- Ikon perisai diperbesar dan diberi ruang terpusat -->
+                    <div class="mb-4 logo-glow">
+                        <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="mx-auto md:mx-0">
                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                             <path d="M12 8v4"/>
                             <path d="M12 16h.01"/>
                         </svg>
                     </div>
-                    <h1 class="text-6xl font-extrabold mb-3 text-white italic">SOCIAL <span class="text-blue-500 font-black">SHIELD</span></h1>
-                    <p class="text-slate-400 mb-2 text-xl italic font-light">"Menjaga Internet Tetap Sehat, Satu Postingan Sekaligus"</p>
+                    <div>
+                        <h1 class="text-7xl font-extrabold mb-4 text-white italic tracking-tight leading-none">SOCIAL <span class="text-blue-500 font-black">SHIELD</span></h1>
+                        <p class="text-slate-400 text-2xl italic font-light leading-relaxed max-w-xl">"Menjaga Internet Tetap Sehat dari Konten Brainrot"</p>
+                    </div>
                 </div>
 
-                <!-- Sisi Kanan: 3 Tombol Stack Vertikal -->
-                <div class="flex flex-col gap-5 w-72">
-                    <button onclick="startGame()" class="btn bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl font-bold text-xl shadow-lg border-b-4 border-blue-800 text-white text-center w-full">
+                <!-- Sisi Kanan: 3 Tombol Stack Vertikal Lebih Tebal -->
+                <div class="flex flex-col gap-6 w-80">
+                    <button onclick="startGame()" class="btn bg-blue-600 hover:bg-blue-500 py-6 rounded-2xl font-bold text-2xl shadow-xl border-b-4 border-blue-800 text-white text-center w-full">
                         MULAI SHIFT
                     </button>
-                    <button onclick="showTutorial()" class="btn bg-slate-700 hover:bg-slate-600 py-5 rounded-2xl font-bold text-xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
+                    <button onclick="showTutorial()" class="btn bg-slate-700 hover:bg-slate-600 py-6 rounded-2xl font-bold text-2xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
                         PANDUAN
                     </button>
-                    <button onclick="showCredits()" class="btn bg-slate-700 hover:bg-slate-600 py-5 rounded-2xl font-bold text-xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
+                    <button onclick="showCredits()" class="btn bg-slate-700 hover:bg-slate-600 py-6 rounded-2xl font-bold text-2xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
                         KREDIT
                     </button>
                 </div>
@@ -567,14 +570,13 @@
             document.getElementById('accuracy-bar').style.width = `${accuracy}%`;
             
             let performanceMsg = "";
-            if (accuracy >= 90) performanceMsg = "Sangat luar biasa! Internet sangat aman di tanganmu.";
-            else if (accuracy >= 70) performanceMsg = "Kerja bagus. Terus tingkatkan kewaspadaanmu.";
-            else if (accuracy >= 50) performanceMsg = "Beberapa konten berbahaya lolos. Butuh fokus lebih.";
-            else performanceMsg = "Kinerja buruk. Kamu membiarkan internet dipenuhi konten aneh.";
+            if (accuracy >= 90) performanceMsg = "MISSION PASSED! GOOD PERFORM!";
+            else if (accuracy >= 70) performanceMsg = "MISSION PASSED! NICE PERFORM!";
+            else if (accuracy >= 50) performanceMsg = "MISSION PASSED, BUT LOW PERFORM.";
+            else performanceMsg = "MISSION FAILED! BRAINROT is TAKEOVER!";
 
             document.getElementById('performance-stat').innerText = performanceMsg;
 
-        
         }
     </script>
 </body>
