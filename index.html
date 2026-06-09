@@ -82,11 +82,23 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            animation: slideIn 0.3s ease-out;
             text-align: left;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
         }
 
-        /* Kartu putih khusus di Lobi */
+        /* Animasi jatuh ke bawah untuk kartu konten */
+        .fall-down {
+            transform: translateY(600px) rotate(12deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Animasi masuk baru */
+        .slide-in-new {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Kartu putih khusus di Lobi dan GameOver */
         .lobby-card {
             background: #ffffff;
             color: #1e293b;
@@ -184,10 +196,10 @@
             filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.45));
         }
 
-        /* Kelas Desain Khusus Pop-Up Acak */
+        /* Kelas Desain Khusus Pop-Up Acak (Ukuran diperbesar menjadi w-96) */
         .random-popup {
             animation: popupReveal 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.85);
         }
 
         @keyframes popupReveal {
@@ -320,7 +332,7 @@
             </div>
 
             <div class="gameplay-layout">
-                <div id="content-display" class="content-card"></div>
+                <div id="content-display" class="content-card slide-in-new"></div>
 
                 <div class="button-sidebar">
                     <button id="btn-aman" onclick="judge('AMAN')" class="btn bg-green-600 hover:bg-green-500 py-6 rounded-2xl font-extrabold text-xl shadow-xl border-b-4 border-green-800 flex items-center justify-center gap-2 text-white">
@@ -336,48 +348,59 @@
             </div>
         </div>
 
-        <!-- RESULT SCREEN -->
+        <!-- RESULT SCREEN (Kini Berlatar Belakang Desain Samping ala Lobby) -->
         <div id="screen-result" class="screen">
-            <div class="mb-4 text-yellow-400 animate-pulse">
-                <svg class="mx-auto" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-            </div>
-            
-            <h2 class="text-5xl font-black mb-2 text-white uppercase italic tracking-tight">Shift Selesai!</h2>
-            <p id="performance-stat" class="text-xl mb-8 text-slate-400 italic max-w-2xl"></p>
-            
-            <div class="bg-slate-800/80 p-8 rounded-2xl border-2 border-slate-700 mb-10 w-full max-w-lg shadow-2xl relative overflow-hidden flex flex-col items-center">
-                <div class="absolute -right-6 -bottom-6 text-slate-700 opacity-10">
-                   <svg width="150" height="150" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+            <div class="flex flex-col md:flex-row items-center justify-between w-full max-w-6xl gap-16 px-8 text-left">
+                <!-- Sisi Kiri: Kartu Laporan Hasil Melengkung Modern -->
+                <div class="flex-1 w-full lobby-card">
+                    <!-- Lencana Laporan (Badge) Kuning yang Berkedip Dinamis -->
+                    <div class="mb-6 text-yellow-500 animate-pulse logo-glow">
+                        <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto">
+                            <circle cx="12" cy="8" r="7"/>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>
+                        </svg>
+                    </div>
+                    <div class="w-full">
+                        <h2 class="text-5xl font-black mb-1 text-slate-800 uppercase italic tracking-tight leading-none text-center">
+                            SHIFT <span class="text-blue-600 font-black">SELESAI!</span>
+                        </h2>
+                        <p id="performance-stat" class="text-slate-500 text-lg italic font-medium leading-relaxed text-center mt-3 mb-6"></p>
+                        
+                        <!-- Panel Informasi Keuangan & Akurasi -->
+                        <div class="w-full bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner flex flex-col items-center">
+                            <div class="w-full flex justify-between items-end mb-2">
+                                <span class="text-xs text-blue-500 uppercase tracking-widest font-black">Estimasi Honor</span>
+                                <span id="accuracy-text" class="text-sm text-slate-500 font-bold">Akurasi: 0%</span>
+                            </div>
+                            
+                            <div id="final-salary" class="text-5xl font-black text-green-600 tabular-nums my-2">Rp 0</div>
+                            <div id="save-status" class="mb-2 text-sm text-blue-500 font-bold hidden italic">Menyimpan skor...</div>
+                            
+                            <div class="w-full h-3 bg-slate-200 rounded-full overflow-hidden mt-3">
+                                <div id="accuracy-bar" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="w-full flex justify-between items-end mb-2">
-                    <span class="text-xs text-blue-400 uppercase tracking-widest font-black">Estimasi Gaji</span>
-                    <span id="accuracy-text" class="text-sm text-slate-400 font-bold">Akurasi: 0%</span>
+                <!-- Sisi Kanan: 3 Tombol Stack Vertikal Sesuai Lobby -->
+                <div class="flex flex-col gap-6 w-80">
+                    <button onclick="startGame()" class="btn bg-blue-600 hover:bg-blue-500 py-6 rounded-2xl font-bold text-2xl shadow-xl border-b-4 border-blue-800 text-white text-center w-full">
+                        LAGI
+                    </button>
+                    <button onclick="showLobby()" class="btn bg-slate-700 hover:bg-slate-600 py-6 rounded-2xl font-bold text-2xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
+                        LOBBY
+                    </button>
+                    <button onclick="showCredits()" class="btn bg-slate-700 hover:bg-slate-600 py-6 rounded-2xl font-bold text-2xl shadow-lg border border-slate-500 text-slate-200 text-center w-full">
+                        KREDIT
+                    </button>
                 </div>
-                
-                <div id="final-salary" class="text-6xl font-black text-green-400 tabular-nums my-3">Rp 0</div>
-                <div id="save-status" class="mb-4 text-sm text-blue-400 font-bold hidden italic">Menyimpan skor...</div>
-                
-                <div class="w-full h-2 bg-slate-700 rounded-full overflow-hidden mt-2">
-                    <div id="accuracy-bar" class="h-full bg-blue-500" style="width: 0%"></div>
-                </div>
-            </div>
-
-            <div class="flex flex-row gap-6 w-full max-w-lg">
-                <button onclick="startGame()" class="btn flex-1 bg-blue-600 hover:bg-blue-500 py-5 rounded-2xl font-bold text-xl shadow-lg border-b-4 border-blue-800 flex items-center justify-center gap-2 text-white">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                    LAGI
-                </button>
-                <button onclick="showLobby()" class="btn flex-1 bg-slate-700 hover:bg-slate-600 py-5 rounded-2xl font-bold text-xl shadow-lg border-b-4 border-slate-900 flex items-center justify-center gap-2 text-white">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    LOBBY
-                </button>
             </div>
         </div>
     </div>
 
     <script>
-        
+
         // Daftar target kata brainrot/penurunan kualitas konten secara luas
         const brainrotDictionary = [
             "LOW-EFFORT", "BODOH", "FOLLOW", "JOGED", "JEDAG-JEDUG", "ROKOK"
@@ -505,7 +528,7 @@
             }, 100);
         }
 
-        // Fungsi pemicu serangan spam 4 pop-up acak
+        // Fungsi pemicu serangan spam 4 pop-up acak (Ukuran diperbesar menjadi w-96)
         function triggerRandomSpamEvent() {
             isPopUpActive = true;
             activePopups = 4;
@@ -517,32 +540,34 @@
 
             // Template teks popup peringatan fiktif ramah anak
             const popupTemplates = [
-                { title: "🚨 AD-BLOCK DETECTED", text: "Iklan mencurigakan diblokir oleh tameng keamanan siber Anda!" },
-                { title: "⚠️ CONNECTION WARNING", text: "Terjadi lonjakan lalu lintas data asing yang tidak stabil!" },
-                { title: "📁 MEMORY BUFFERING", text: "Pembersihan memori sementara (cache) sistem diperlukan!" },
-                { title: "🔥 OVERHEAT DANGER", text: "Temperatur server melonjak! Segera jalankan kipas darurat!" }
+                { title: "🚨 AD-BLOCK DETECTED", text: "Iklan mencurigakan diblokir oleh tameng keamanan siber Anda! Harap periksa integritas sistem." },
+                { title: "⚠️ CONNECTION WARNING", text: "Terjadi lonjakan lalu lintas data asing yang tidak stabil di jaringan Anda! Mohon waspada." },
+                { title: "📁 MEMORY BUFFERING", text: "Pembersihan memori sementara (cache) sistem darurat diperlukan agar sistem tidak lag!" },
+                { title: "🔥 OVERHEAT DANGER", text: "Temperatur inti server melonjak tajam! Segera jalankan program kipas darurat!" }
             ];
 
-            // Pasang 4 pop-up di posisi acak di layar
+            // Pasang 4 pop-up di posisi acak di layar (Ukuran w-96 yang lebih menantang dan jelas)
             for (let i = 0; i < 4; i++) {
                 const popup = document.createElement('div');
                 popup.id = `popup-spam-${i}`;
-                popup.className = "random-popup absolute bg-slate-900 border-2 border-red-500 rounded-2xl p-5 z-[100] w-72 text-left flex flex-col";
+                popup.className = "random-popup absolute bg-slate-900 border-2 border-red-500 rounded-2xl p-6 z-[100] w-96 text-left flex flex-col";
                 
                 // Koordinat acak aman di tengah layar agar tidak keluar viewport
-                const topPos = Math.floor(Math.random() * 45) + 15;
-                const leftPos = Math.floor(Math.random() * 45) + 15;
+                const topPos = Math.floor(Math.random() * 40) + 15;
+                const leftPos = Math.floor(Math.random() * 40) + 15;
                 
                 popup.style.top = `${topPos}%`;
                 popup.style.left = `${leftPos}%`;
 
                 popup.innerHTML = `
-                    <div class="flex justify-between items-center border-b border-red-500/30 pb-2 mb-3">
-                        <span class="text-xs font-black text-red-500 tracking-wider">${popupTemplates[i].title}</span>
-                        <button onclick="dismissSinglePopup(${i})" class="text-red-400 hover:text-red-300 font-bold bg-red-500/10 hover:bg-red-500/30 px-2.5 py-0.5 rounded text-sm btn">X</button>
+                    <div class="flex justify-between items-center border-b border-red-500/30 pb-3 mb-4">
+                        <span class="text-sm font-black text-red-500 tracking-wider flex items-center gap-2">
+                           <span>⚠</span> ${popupTemplates[i].title}
+                        </span>
+                        <button onclick="dismissSinglePopup(${i})" class="text-red-400 hover:text-red-300 font-bold bg-red-500/10 hover:bg-red-500/30 px-3 py-1 rounded text-sm btn">X</button>
                     </div>
-                    <p class="text-xs text-slate-300 mb-4 leading-relaxed">${popupTemplates[i].text}</p>
-                    <button onclick="dismissSinglePopup(${i})" class="mt-auto w-full bg-red-600 hover:bg-red-500 text-white font-bold text-xs py-2 rounded-lg btn">TUTUP PERINGATAN</button>
+                    <p class="text-sm text-slate-300 mb-5 leading-relaxed">${popupTemplates[i].text}</p>
+                    <button onclick="dismissSinglePopup(${i})" class="mt-auto w-full bg-red-600 hover:bg-red-500 text-white font-bold text-sm py-3 rounded-lg btn transition-colors">TUTUP PERINGATAN</button>
                 `;
 
                 document.querySelector('.game-container').appendChild(popup);
@@ -601,7 +626,8 @@
                 return `<span class="word-token text-slate-800" data-index="${index}" data-word="${cleanWord}" data-brainrot="${isActuallyBrainrot}" onclick="toggleWordHighlight(this)">${word}</span>`;
             }).join(" ");
 
-            document.getElementById('content-display').innerHTML = `
+            const card = document.getElementById('content-display');
+            card.innerHTML = `
                 ${logoHTML}
                 <div class="flex-1 flex flex-col justify-center">
                     <p class="text-xs font-bold text-slate-400 mb-1 uppercase tracking-tighter">ID: #USER-${Math.floor(Math.random()*100000)}</p>
@@ -698,7 +724,15 @@
                 triggerFeedback(customFeedback || "SALAH!", "#f87171");
             }
             
-            nextContent();
+            // Integrasi animasi jatuh ke bawah pada kartu konten saat beralih data
+            const card = document.getElementById('content-display');
+            card.classList.add('fall-down');
+            
+            // Tunggu animasi jatuh selesai sebelum memuat konten berikutnya secara mulus
+            setTimeout(() => {
+                card.classList.remove('fall-down');
+                nextContent();
+            }, 400);
         }
 
         function triggerFeedback(text, color) {
